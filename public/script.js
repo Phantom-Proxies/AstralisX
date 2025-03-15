@@ -127,6 +127,7 @@ document.addEventListener('keydown', function (event) {
                 url = urlCheck.url;
             }
             tabController.tabs[tabController.activetab].changeLocation(title, url);
+            document.getElementById("tab-viewer").focus();
         }
     }
 });
