@@ -129,7 +129,7 @@ class TabController {
     }
 
     opentab(index) {
-        if (this.tabs[this.activetab]) this.tabs[this.activetab].active = "false";
+        this.tabs[this.activetab].active = "false";
         this.tabs[index].active = "true";
         this.activetab = index;
         this.update();
