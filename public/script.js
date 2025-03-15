@@ -163,6 +163,7 @@ tabController.newtab('astralisX://home', 'Home');
 tabController.newtab('astralisX://newtab', 'New Tab');
 tabController.update();
 tabController.opentab(0);
+document.getElementById("search-box").value = "";
 
 document.addEventListener('keydown', function (event) {
     if (event.key === 'Enter') {
