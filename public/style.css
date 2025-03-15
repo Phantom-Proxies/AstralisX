@@ -20,6 +20,17 @@ body {
     z-index: 15;
 }
 
+.tab-viewer {
+    display: block;
+    height: calc(100vh - 100px);
+    width: 100vw;
+    position: fixed;
+    top: 100px;
+    border: none;
+    background: white;
+}
+
+
 .nav-buttons {
     display: flex;
     align-items: center;
