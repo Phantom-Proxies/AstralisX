@@ -43,6 +43,14 @@
             top:-70px;
         }
 
+        .credits {
+            color: #109CBFFF;
+            font-family: "Lexend", sans-serif;
+            font-size: 20px;
+            position:relative;
+            top:-70px;
+        }
+
         .home-button {
             font-family: "Lexend", sans-serif;
             height: 36px;
@@ -84,21 +92,32 @@
 <h1>Welcome to <span class="title-highlight">AstralisX</span></h1>
 <br>
 <p id="typewrite-bio" class="bio"></p>
+<p id="typewrite-credits" class="credits"></p>
 <span class="home-button-container"><button onclick="" class="home-button">Settings</button><button onclick="" class="home-button">Customization</button></span>
 </body>
 <script>
-    var i = 0;
-    var txt = 'AstralisX is an elegant and secure browser used for browsing with concealment and anonymity.';
-    var credits = 'A project by darkkat736 and dyamuh.';
+    var bioI = 0;
+    var creditsI = 0;
+    var bio = 'AstralisX is an elegant and secure browser used for browsing with concealment and anonymity.';
+    var credits = 'A project by darkcat736 and dyamuh.';
     var speed = 50;
 
-    function typeWriter() {
-        if (i < txt.length) {
-            document.getElementById("typewrite-bio").innerHTML += txt.charAt(i);
-            i++;
-            setTimeout(typeWriter, speed);
+    function typeWriterBio() {
+        if (bioI < bio.length) {
+            document.getElementById("typewrite-bio").innerHTML += bio.charAt(bioI);
+            bioI++;
+            setTimeout(typeWriterBio, speed);
         }
     }
-    typeWriter();
+
+    function typeWriterCredits() {
+        if (creditsI < credits.length) {
+            document.getElementById("typewrite-credits").innerHTML += credits.charAt(creditsI);
+            creditsI++;
+            setTimeout(typeWriterCredits, speed);
+        }
+    }
+    typeWriterBio();
+    typeWriterCredits()
 </script>
 </html>
