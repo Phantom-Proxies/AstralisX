@@ -5,13 +5,13 @@ class Tab {
         this.active = "false";
         this.history = [tabURL];
         this.historyIndex = 0;
-        this.loadWithProxy = !this.url.startsWith('eclipse://');
+        this.loadWithProxy = !this.url.startsWith('astralisX://');
     }
 
     changeLocation(newTitle, newURL) {
-        if (newURL === 'eclipse://home') {
+        if (newURL === 'astralisx://home') {
             this.title = 'Home';
-        } else if (newURL === 'eclipse://newtab') {
+        } else if (newURL === 'astralisX://newtab') {
             this.title = 'New Tab';
         } else {
             this.title = newTitle;
@@ -19,7 +19,7 @@ class Tab {
         this.url = newURL;
         this.history.push(newURL);
         this.historyIndex = this.history.length - 1;
-        this.loadWithProxy = !this.url.startsWith('eclipse://');
+        this.loadWithProxy = !this.url.startsWith('astralisX://');
         tabController.update();
         tabController.updateIframe();
     }
@@ -54,7 +54,7 @@ class TabController {
 
     update() {
         let container = document.getElementById(this.containerID);
-        container.innerHTML = `<div class="newtab" id="newtab" onclick="tabController.newtab('eclipse://newtab', 'New Tab');"><img src="icons/add-tab.png" class="newtab-icon"></div>`;
+        container.innerHTML = `<div class="newtab" id="newtab" onclick="tabController.newtab('astralisX://newtab', 'New Tab');"><img src="icons/add-tab.png" class="newtab-icon"></div>`;
         this.tabs.forEach((tab, index) => {
             container.innerHTML += `<div class="tab" draggable="true" data-index="${index}" onclick="tabController.opentab(${index})" active-tab="${tab.active}">
             <img src="icons/new-tab.png" class="tab-favicon">
@@ -103,7 +103,7 @@ class TabController {
     deletetab(index) {
         this.tabs.splice(index, 1);
         if (this.tabs.length === 0) {
-            this.newtab('eclipse://newtab', 'New Tab');
+            this.newtab('astralisX://newtab', 'New Tab');
         }
         this.activetab = Math.min(this.activetab, this.tabs.length - 1);
         this.update();
@@ -123,11 +123,11 @@ class TabController {
         let iframe = document.getElementById("tab-viewer");
         if (!iframe) return;
         let activeTab = this.tabs[this.activetab];
-        if (activeTab.url.startsWith("eclipse://")) {
-            if (activeTab.url === "eclipse://home") {
+        if (activeTab.url.startsWith("astralisX://")) {
+            if (activeTab.url === "astralisX://home") {
                 iframe.src = "";
                 iframe.src = "home.html";
-            } else if (activeTab.url === "eclipse://newtab") {
+            } else if (activeTab.url === "astralisX://newtab") {
                 iframe.src = "";
                 iframe.src = "new.html";
             } else {
@@ -141,8 +141,8 @@ class TabController {
 }
 
 let tabController = new TabController('tab-bar');
-tabController.newtab('eclipse://home', 'Home');
-tabController.newtab('eclipse://newtab', 'New Tab');
+tabController.newtab('astralisX://home', 'Home');
+tabController.newtab('astralisX://newtab', 'New Tab');
 tabController.update();
 tabController.opentab(0);
 
