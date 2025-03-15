@@ -71,7 +71,7 @@ body {
     height: 36px;
     background-color: #111112;
     margin: 7px 5px;
-    border: 1px solid rgb(122, 26, 245);
+    border: 1px solid #109CBFFF;
     border-radius: 5px;
     transition: background-color 0.2s;
     cursor: pointer;
@@ -82,11 +82,11 @@ body {
 }
 
 .tab[active-tab="true"] {
-    box-shadow: 0 0 30px 0.5px rgb(122, 26, 245, 0.9);
+    box-shadow: 0 0 30px 0.5px #109CBFFF;
     height: 36px;
-    background-color: rgb(122, 26, 245);
+    background-color: #109CBFFF;
     margin: 7px 5px;
-    border: 1px solid rgb(122, 26, 245);
+    border: 1px solid #109CBFFF;
     border-radius: 5px;
     transition: background-color 0.2s;
     cursor: pointer;
@@ -97,11 +97,11 @@ body {
 }
 
 .tab:hover {
-    background-color: #7A1AF5FF;
+    background-color: #109CBFFF;
 }
 
 .tab:active {
-    background-color: #6816d1;
+    background-color: #0e738c;
 }
 
 .tab-title {
@@ -140,7 +140,7 @@ body {
     height: 36px;
     background-color: #111112;
     margin: 7px 5px;
-    border: 1px solid rgb(122, 26, 245);
+    border: 1px solid #109CBFFF;
     border-radius: 5px;
     transition: background-color 0.2s;
     cursor: pointer;
@@ -152,11 +152,11 @@ body {
 }
 
 .newtab:hover {
-    background-color: #7A1AF5FF;
+    background-color: #109CBFFF;
 }
 
 .newtab:active {
-    background-color: #6816d1;
+    background-color: #0E738CFF;
 }
 
 .newtab-icon {
@@ -172,16 +172,17 @@ body {
     background-color: #111112;
     margin: 7px 5px;
     padding-left: 10px;
-    border: 1px solid rgb(122, 26, 245);
+    border: 1px solid #109CBFFF;
     border-radius: 5px;
     transition: box-shadow 0.2s;
     cursor: text;
-    color: white;
+    color: #8f8f8f;
 }
 
 .search-box:focus {
-    box-shadow: 0 0 10px 0.5px rgb(122, 26, 245, 0.9);
+    box-shadow: 0 0 10px 0.5px #109CBFFF;
     outline: none;
+    color: white;
 }
 
 @keyframes opacityFlicker {
