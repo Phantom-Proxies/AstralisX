@@ -56,12 +56,42 @@ class TabController {
         let container = document.getElementById(this.containerID);
         container.innerHTML = `<div class="newtab" id="newtab" onclick="tabController.newtab('eclipse://newtab', 'New Tab');"><img src="icons/add-tab.png" class="newtab-icon"></div>`;
         this.tabs.forEach((tab, index) => {
-            container.innerHTML += `<div class="tab" onclick="tabController.opentab(${index})" active-tab="${tab.active}">
-                <img src="icons/new-tab.png" class="tab-favicon">
-                <p class="tab-title">${tab.title}</p>
-                <img src="icons/tab-close.png" class="tab-close" onclick="event.stopPropagation(); tabController.deletetab(${index})">
-            </div>`;
+            container.innerHTML += `<div class="tab" draggable="true" data-index="${index}" onclick="tabController.opentab(${index})" active-tab="${tab.active}">
+            <img src="icons/new-tab.png" class="tab-favicon">
+            <p class="tab-title">${tab.title}</p>
+            <img src="icons/tab-close.png" class="tab-close" onclick="event.stopPropagation(); tabController.deletetab(${index})">
+        </div>`;
         });
+        this.addDragEventListeners();
+    }
+
+    addDragEventListeners(){
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('dragstart', this.handleDragStart.bind(this));
+            tab.addEventListener('dragover', this.handleDragOver.bind(this));
+            tab.addEventListener('drop', this.handleDrop.bind(this));
+        });
+    }
+
+    handleDragStart(event) {
+        event.dataTransfer.setData('text/plain', event.target.dataset.index);
+    }
+
+    handleDragOver(event) {
+        event.preventDefault();
+    }
+
+    handleDrop(event) {
+        const fromIndex = event.dataTransfer.getData('text/plain');
+        const toIndex = event.target.dataset.index;
+        this.moveTab(fromIndex, toIndex);
+    }
+
+    moveTab(fromIndex, toIndex){
+        const tab = this.tabs.splice(fromIndex, 1)[0];
+        this.tabs.splice(toIndex, 0, tab);
+        this.update();
     }
 
     newtab(url, title) {
@@ -111,7 +141,7 @@ class TabController {
 }
 
 let tabController = new TabController('tab-bar');
-tabController.newtab('eclipse://home', 'Home Page');
+tabController.newtab('eclipse://home', 'Home');
 tabController.newtab('eclipse://newtab', 'New Tab');
 tabController.update();
 tabController.opentab(0);

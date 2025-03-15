@@ -104,6 +104,10 @@ body {
     background-color: #0e738c;
 }
 
+.tab[draggable="true"]:active {
+    cursor: grabbing;
+}
+
 .tab-title {
     margin: 0;
     white-space: nowrap;
