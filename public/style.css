@@ -21,13 +21,13 @@ body {
 }
 
 .tab-viewer {
-    display: block;
-    height: calc(100vh - 100px);
+    position: absolute;
+    bottom: 0;
+    left: 0;
     width: 100vw;
-    position: fixed;
-    top: 100px;
+    height: calc(100vh - 100px);
     border: none;
-    background: white;
+    overflow: hidden;
 }
 
 
@@ -111,6 +111,7 @@ body {
     text-overflow: ellipsis;
     max-width: 200px;
     margin-left: 10px;
+    margin-right: 10px;
 }
 
 .tab-favicon {
@@ -207,15 +208,4 @@ body {
     animation: opacityFlicker 5s infinite;
     background-color: black;
     visibility: hidden;
-}
-
-.tab-viewer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: calc(100vh - 100px);
-    width: 100vw;
-    position: fixed;
-    top: 100px;
-    visibility: visible;
 }
