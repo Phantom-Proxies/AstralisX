@@ -15,10 +15,33 @@ body {
     top: 50px;
     left: 0;
     display: flex;
-    justify-content: center;
     align-items: center;
+    padding: 0 10px;
     z-index: 15;
 }
+
+.nav-buttons {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.nav-buttons button {
+    background-color: #111112;
+    border: none;
+    cursor: pointer;
+    padding: 5px 10px;
+    margin: 0 3px;
+    border-radius: 3px;
+    transition: background-color 0.2s;
+    color: white;
+    font-size: 16px
+}
+
+.nav-buttons button:hover {
+    background-color: #333333;
+}
+
 
 .tab-bar {
     width: 100vw;
