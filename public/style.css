@@ -82,8 +82,7 @@ body {
 }
 
 .tab[active-tab="true"] {
-    box-shadow: 0 0 10px 0.5px rgb(122, 26, 245, 0.9);
-    outline: none;
+    box-shadow: 0 0 30px 0.5px rgb(122, 26, 245, 0.9);
     height: 36px;
     background-color: rgb(122, 26, 245);
     margin: 7px 5px;
@@ -107,7 +106,6 @@ body {
 
 .tab-title {
     margin: 0;
-    margin-right:15px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
