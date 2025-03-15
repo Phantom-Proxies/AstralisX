@@ -106,17 +106,30 @@ document.addEventListener('keydown', function(event) {
     if (event.key === 'Enter') {
         if (document.getElementById("search-box") == document.activeElement) {
             //alert(document.getElementById("search-box").value);
-            try {
-                new URL(document.getElementById("search-box").value);
-                tabController.tabs[tabController.activetab].url = document.getElementById("search-box").value;
-                tabController.tabs[tabController.activetab].title = document.getElementById("search-box").value; //NEED TITLE LOGIC
+
+            if (checkURL(document.getElementById("search-box").value).isValid == true) {
+                tabController.tabs[tabController.activetab].url = checkURL(document.getElementById("search-box").value).url;
+                tabController.tabs[tabController.activetab].title = checkURL(document.getElementById("search-box").value).url; //NEED TITLE LOGIC
+                document.getElementById("search-box").value = checkURL(document.getElementById("search-box").value).url;
                 tabController.update();
-            } catch (e) {
-                console.log("call search engine: " +e);
+            } else {
+                console.log("call search engine");
                 //NEED SEARCH CODE HERE
             }
         }
     }
 });
+
+function checkURL(input) {
+    if (input.startsWith("http://") || input.startsWith("https://")) {
+        return { isValid: true, url: input };
+    }
+
+    if (input.includes(".") && input.split(".").length > 1) {
+        return { isValid: true, url: "https://" + input };
+    }
+
+    return { isValid: false, url: null };
+}
 </script>
 </html>
