@@ -7,6 +7,21 @@ body {
     background-color:black;
 }
 
+.search-bar {
+    overflow: hidden;
+    width: 100vw;
+    height:50px;
+    background-color: #111112;
+    position: fixed;
+    top:50px;
+    left:0px;
+    display: flex;
+    flex-direction: row;
+    padding-left:5px;
+    padding-right:15px;
+    z-index: 15;
+}
+
 .tab-bar {
     overflow-x: scroll;
     overflow-y: hidden;
@@ -22,7 +37,7 @@ body {
     padding-right:15px;
 }
 
-.tab {
+.tab[active-tab="false"] {
     box-sizing: border-box;
     height:36px;
     background-color: #111112;
@@ -41,6 +56,25 @@ body {
     color:white;
 }
 
+.tab[active-tab="true"] {
+    box-shadow: 0px 0px 30px 0.5px rgb(122, 26, 245, 0.9);
+    box-sizing: border-box;
+    height:36px;
+    background-color: rgb(122, 26, 245);
+    position:relative;
+    flex-basis: 300px;
+    flex-shrink: 0;
+    margin-top:7px;
+    margin-left:5px;
+    margin-right:5px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(122, 26, 245);
+    border-radius:5px;
+    transition-duration: 0.2s;
+    cursor: pointer;
+    color:white;
+}
 .tab:hover {
     background-color: #7A1AF5FF;
 }
@@ -54,6 +88,9 @@ body {
     top:-38px;
     left:40px;
     width:210px;
+    text-overflow: ellipsis;
+    overflow:hidden;
+    white-space:nowrap;
 }
 
 .tab-favicon {
@@ -113,4 +150,68 @@ body {
     position:relative;
     top:4.5px;
     left:5px;
+}
+
+.search-box {
+    font-family: "Inter", sans-serif;
+    box-sizing: border-box;
+    height:36px;
+    width: 80vw;
+    background-color: #111112;
+    position:relative;
+    flex-basis: 300px;
+    flex-shrink: 0;
+    margin-top:7px;
+    margin-left:5px;
+    margin-right:5px;
+    padding-left:10px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(122, 26, 245);
+    border-radius:5px;
+    transition-duration: 0.2s;
+    cursor: text;
+    color:white;
+}
+
+.search-box:focus {
+    box-shadow: 0px 0px 10px 0.5px rgb(122, 26, 245, 0.9);
+    outline: none;
+}
+
+@keyframes opacityFlicker {
+    0% {
+        opacity: 0;
+    }
+    70% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.proxy-loading {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:calc(100vh - 100px);
+    width:100vw;
+    position:fixed;
+    top:100px;
+    color:white;
+    animation: opacityFlicker 5s infinite;
+    background-color: black;
+    visibility: hidden;
+}
+
+.tab-viewer {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:calc(100vh - 100px);
+    width:100vw;
+    position:fixed;
+    top:100px;
+    visibility: visible;
 }
