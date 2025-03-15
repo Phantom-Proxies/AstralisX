@@ -9,14 +9,19 @@ class Tab {
     }
 
     changeLocation(newTitle, newURL) {
-        this.title = newTitle;
+        if (newURL === 'eclipse://home') {
+            this.title = 'Home';
+        } else if (newURL === 'eclipse://newtab') {
+            this.title = 'New Tab';
+        } else {
+            this.title = newTitle;
+        }
         this.url = newURL;
         this.history.push(newURL);
         this.historyIndex = this.history.length - 1;
         this.loadWithProxy = !this.url.startsWith('eclipse://');
-        
         tabController.update();
-        tabController.updateIframe(); 
+        tabController.updateIframe();
     }
 
     goBack() {
@@ -25,7 +30,7 @@ class Tab {
             this.url = this.history[this.historyIndex];
             document.getElementById("search-box").value = this.url;
             tabController.update();
-            tabController.updateIframe(); 
+            tabController.updateIframe();
         }
     }
 
@@ -84,23 +89,25 @@ class TabController {
         this.updateIframe();
     }
 
-updateIframe() {
-    let iframe = document.getElementById("tab-viewer");
-    if (!iframe) return;
-    let activeTab = this.tabs[this.activetab];
-
-    if (activeTab.url.startsWith("eclipse://")) {
-        if (activeTab.url === "eclipse://home") {
-            iframe.src = "home.html";
-        } else if (activeTab.url === "eclipse://newtab") {
-            iframe.src = "new.html";
+    updateIframe() {
+        let iframe = document.getElementById("tab-viewer");
+        if (!iframe) return;
+        let activeTab = this.tabs[this.activetab];
+        if (activeTab.url.startsWith("eclipse://")) {
+            if (activeTab.url === "eclipse://home") {
+                iframe.src = "";
+                iframe.src = "home.html";
+            } else if (activeTab.url === "eclipse://newtab") {
+                iframe.src = "";
+                iframe.src = "new.html";
+            } else {
+                iframe.src = "";
+            }
+        } else {
+            iframe.src = "";
+            iframe.src = activeTab.url;
         }
-    } else {
-        iframe.src = activeTab.url;
     }
-}
-
-
 }
 
 let tabController = new TabController('tab-bar');
@@ -114,11 +121,12 @@ document.addEventListener('keydown', function (event) {
         let searchBox = document.getElementById("search-box");
         if (searchBox === document.activeElement) {
             let urlCheck = checkURL(searchBox.value);
+            let url = searchBox.value;
+            let title = url;
             if (urlCheck.isValid) {
-                tabController.tabs[tabController.activetab].changeLocation(urlCheck.url, urlCheck.url);
-            } else {
-                console.log("call search engine");
+                url = urlCheck.url;
             }
+            tabController.tabs[tabController.activetab].changeLocation(title, url);
         }
     }
 });
