@@ -91,7 +91,25 @@ class TabController {
     moveTab(fromIndex, toIndex){
         const tab = this.tabs.splice(fromIndex, 1)[0];
         this.tabs.splice(toIndex, 0, tab);
+
+        this.tabs.forEach((tab, index) => {
+            if (index === this.activetab) {
+                tab.active = "true";
+            } else {
+                tab.active = "false";
+            }
+        });
+
+        if (fromIndex === this.activetab) {
+            this.activetab = toIndex;
+        } else if (fromIndex < this.activetab && toIndex >= this.activetab) {
+            this.activetab--;
+        } else if (fromIndex > this.activetab && toIndex <= this.activetab) {
+            this.activetab++;
+        }
+
         this.update();
+        this.updateIframe();
     }
 
     newtab(url, title) {
