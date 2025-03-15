@@ -6,4 +6,4 @@ You can view this website here: https://eclipseproxy.kittentech.org/public
 
 ---
 
-This repo contains the code for an elegant, advanced browser that utilizes Phantom Network's proxy technologies. The browser is currently in an experimental state and is not fully functional. We hope to release it in conjunction with Phantom OS v2. Get ready!
+This repo contains the code for an elegant, advanced browser that utilizes Phantom Network's proxy technologies. The browser is currently in an experimental state and is not fully functional. We hope to release it in conjunction with PhantomOSv2. Get ready!
