@@ -1,26 +1,22 @@
-class tab {
+class Tab {
     constructor(tabTitle, tabURL) {
         this.title = tabTitle;
-        this.url = tabURL
+        this.url = tabURL;
         this.active = "false";
         this.history = [tabURL];
         this.historyIndex = 0;
-        if (this.url.startsWith('eclipse://')) {
-            this.loadWithProxy = false;
-        } else {
-            this.loadWithProxy = true;
-        }
+        this.loadWithProxy = !this.url.startsWith('eclipse://');
     }
+
     changeLocation(newTitle, newURL) {
         this.title = newTitle;
         this.url = newURL;
         this.history.push(newURL);
         this.historyIndex = this.history.length - 1;
-        if (this.url.startsWith('eclipse://')) {
-            this.loadWithProxy = false;
-        } else {
-            this.loadWithProxy = true;
-        }
+        this.loadWithProxy = !this.url.startsWith('eclipse://');
+        
+        tabController.update();
+        tabController.updateIframe(); 
     }
 
     goBack() {
@@ -29,6 +25,7 @@ class tab {
             this.url = this.history[this.historyIndex];
             document.getElementById("search-box").value = this.url;
             tabController.update();
+            tabController.updateIframe(); 
         }
     }
 
@@ -38,80 +35,87 @@ class tab {
             this.url = this.history[this.historyIndex];
             document.getElementById("search-box").value = this.url;
             tabController.update();
+            tabController.updateIframe();
         }
-    }
-
-    reload() {
-        this.url = this.history[this.historyIndex];
-        document.getElementById("search-box").value = this.url;
-        tabController.update();
     }
 }
 
-class tabcontroller {
-    constructor(tabContainerID, tabControllerVarName) {
+class TabController {
+    constructor(tabContainerID) {
         this.containerID = tabContainerID;
-        this.controllerVar = tabControllerVarName;
         this.activetab = 0;
         this.tabs = [];
     }
 
     update() {
-        let i = 0;
-        document.getElementById(this.containerID).innerHTML = `<div class="newtab" id="newtab" onclick="` + this.controllerVar + `.newtab('eclipse://newtab', 'New Tab');"><img src="icons/add-tab.png" class="newtab-icon"></div>`;
-        while (i != this.tabs.length) {
-            document.getElementById(this.containerID).innerHTML = document.getElementById(this.containerID).innerHTML + `<div class="tab" id="tab" onclick="` + this.controllerVar + `.opentab('` + i.toString() + `');" active-tab="` + this.tabs[i].active + `"><img src="icons/new-tab.png" class="tab-favicon"><p class="tab-title">` + this.tabs[i].title + `</p><img src="icons/tab-close.png" class="tab-close" onclick="` + this.controllerVar + `.deletetab('` + i.toString() + `')"></div>`;
-            i++;
-        }
+        let container = document.getElementById(this.containerID);
+        container.innerHTML = `<div class="newtab" id="newtab" onclick="tabController.newtab('eclipse://newtab', 'New Tab');"><img src="icons/add-tab.png" class="newtab-icon"></div>`;
+        this.tabs.forEach((tab, index) => {
+            container.innerHTML += `<div class="tab" onclick="tabController.opentab(${index})" active-tab="${tab.active}">
+                <img src="icons/new-tab.png" class="tab-favicon">
+                <p class="tab-title">${tab.title}</p>
+                <img src="icons/tab-close.png" class="tab-close" onclick="event.stopPropagation(); tabController.deletetab(${index})">
+            </div>`;
+        });
     }
 
     newtab(url, title) {
-        this.tabs.push(new tab(title, url));
+        this.tabs.push(new Tab(title, url));
         this.opentab(this.tabs.length - 1);
-        this.update()
+        this.update();
     }
 
     deletetab(index) {
-        try {
-            this.tabs.splice(Number(index), 1);
-            if (this.tabs.length == 0) {
-                console.log("deletetab, is tabs empty, tabs list is empty.");
-                this.newtab('eclipse://newtab', 'New Tab');
-            }
-            if (this.tabs[this.activetab] === undefined) {
-                console.log("deletetab, is activetab null, active tab is undefined.");
-                this.activetab = this.tabs.length - 1;
-            }
-            this.update();
-            this.opentab(this.activetab);
-        } catch (e) {
-            alert(e);
+        this.tabs.splice(index, 1);
+        if (this.tabs.length === 0) {
+            this.newtab('eclipse://newtab', 'New Tab');
         }
+        this.activetab = Math.min(this.activetab, this.tabs.length - 1);
+        this.update();
+        this.opentab(this.activetab);
     }
 
     opentab(index) {
-        console.log("opentab, index: " + index);
-        this.tabs[this.activetab].active = "false";
-        this.tabs[Number(index)].active = "true";
-        this.activetab = Number(index);
+        if (this.tabs[this.activetab]) this.tabs[this.activetab].active = "false";
+        this.tabs[index].active = "true";
+        this.activetab = index;
         this.update();
         document.getElementById("search-box").value = this.tabs[this.activetab].url;
+        this.updateIframe();
+    }
+
+updateIframe() {
+    let iframe = document.getElementById("tab-viewer");
+    if (!iframe) return;
+    let activeTab = this.tabs[this.activetab];
+
+    if (activeTab.url.startsWith("eclipse://")) {
+        if (activeTab.url === "eclipse://home") {
+            iframe.src = "home.html";
+        } else if (activeTab.url === "eclipse://newtab") {
+            iframe.src = "new.html";
+        }
+    } else {
+        iframe.src = activeTab.url;
     }
 }
 
-let tabController = new tabcontroller('tab-bar', 'tabController');
+
+}
+
+let tabController = new TabController('tab-bar');
 tabController.newtab('eclipse://home', 'Home Page');
 tabController.newtab('eclipse://newtab', 'New Tab');
 tabController.update();
-tabController.opentab("0");
+tabController.opentab(0);
 
 document.addEventListener('keydown', function (event) {
     if (event.key === 'Enter') {
-        if (document.getElementById("search-box") == document.activeElement) {
-            if (checkURL(document.getElementById("search-box").value).isValid == true) {
-                tabController.tabs[tabController.activetab].changeLocation(checkURL(document.getElementById("search-box").value).url, checkURL(document.getElementById("search-box").value).url);
-                document.getElementById("search-box").value = checkURL(document.getElementById("search-box").value).url;
-                tabController.update();
+        let searchBox = document.getElementById("search-box");
+        if (searchBox === document.activeElement) {
+            let urlCheck = checkURL(searchBox.value);
+            if (urlCheck.isValid) {
+                tabController.tabs[tabController.activetab].changeLocation(urlCheck.url, urlCheck.url);
             } else {
                 console.log("call search engine");
             }
@@ -138,5 +142,8 @@ document.getElementById('forward-button').addEventListener('click', function() {
 });
 
 document.getElementById('reload-button').addEventListener('click', function() {
-    tabController.tabs[tabController.activetab].reload();
+    tabController.tabs[tabController.activetab].changeLocation(
+        tabController.tabs[tabController.activetab].title,
+        tabController.tabs[tabController.activetab].url
+    );
 });
