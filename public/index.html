@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@200..800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
-<body>
+<body id="body">
     <div class="tab-bar" id="tab-bar">
         <div class="newtab" id="newtab"><img src="icons/add-tab.png" class="newtab-icon"></div>
     </div>
@@ -25,7 +25,10 @@
             </form>
         </div>
     </div>
-    <iframe id="tab-viewer" class="tab-viewer"></iframe>
+    <div id="tab-viewer-collection">
+
+    </div>
+<!--    <iframe id="tab-viewer" class="tab-viewer"></iframe>-->
 
     <div id="proxy-loading" class="proxy-loading">
         <h1 class="flicker">Please wait. The proxy is working...</h1>

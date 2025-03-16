@@ -28,6 +28,8 @@ body {
     height: calc(100vh - 100px);
     border: none;
     overflow: hidden;
+    opacity: 0;
+    animation-fill-mode: forwards;
 }
 
 
@@ -194,6 +196,23 @@ body {
         opacity: 0;
     }
     70% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+@keyframes fadeOut {
+    0% {
         opacity: 1;
     }
     100% {
