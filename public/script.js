@@ -171,12 +171,13 @@ document.addEventListener('keydown', function (event) {
         if (searchBox === document.activeElement) {
             let urlCheck = checkURL(searchBox.value);
             let url = null;
-            if (urlCheck.isValid == false && searchBox.value != "astralisX://home" && searchBox.value != "astralisX://newtab") {
+            if (urlCheck.isValid == false && !searchBox.value.startsWith("astralisX://")) {
                 url = "https://bing.com/search?q=" + encodeURIComponent(searchBox.value);
             } else {
                 url = urlCheck.url;
             }
             let title = url;
+            console.log(url);
             tabController.tabs[tabController.activetab].changeLocation(title, url);
             document.getElementById("tab-viewer").focus();
         }
@@ -184,7 +185,7 @@ document.addEventListener('keydown', function (event) {
 });
 
 function checkURL(input) {
-    if (input.startsWith("http://") || input.startsWith("https://")) {
+    if (input.startsWith("http://") || input.startsWith("https://") || input.startsWith("astralisX://")) {
         return { isValid: true, url: input };
     }
     if (input.includes(".") && input.split(".").length > 1) {
