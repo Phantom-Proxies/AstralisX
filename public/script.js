@@ -170,11 +170,13 @@ document.addEventListener('keydown', function (event) {
         let searchBox = document.getElementById("search-box");
         if (searchBox === document.activeElement) {
             let urlCheck = checkURL(searchBox.value);
-            let url = searchBox.value;
-            let title = url;
-            if (urlCheck.isValid) {
+            let url = null;
+            if (urlCheck.isValid == false && searchBox.value != "astralisX://home" && searchBox.value != "astralisX://newtab") {
+                url = "https://bing.com/search?q=" + encodeURIComponent(searchBox.value);
+            } else {
                 url = urlCheck.url;
             }
+            let title = url;
             tabController.tabs[tabController.activetab].changeLocation(title, url);
             document.getElementById("tab-viewer").focus();
         }
