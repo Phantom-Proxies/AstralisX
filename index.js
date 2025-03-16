@@ -1,86 +1,62 @@
-import { createServer } from "node:http";
-import { join } from "node:path";
+// Proxy config for spectre used but not for real release. Will switch to UV backend later.
+
+//import needed stuff
+import express from 'express';
+import cors from 'cors';
+import path from 'node:path';
+import http from 'node:http';
 import { hostname } from "node:os";
-import wisp from "wisp-server-node";
-import Fastify from "fastify";
-import fastifyStatic from "@fastify/static";
-import { fileURLToPath } from "node:url";
+import { createBareServer } from "@tomphttp/bare-server-node";
+// wisp is being dumb
+// import { createWispServer } from '@mercuryworkshop/wisp-js/server';
 
-// static paths
-import { uvPath } from "@titaniumnetwork-dev/ultraviolet";
-import { epoxyPath } from "@mercuryworkshop/epoxy-transport";
-import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
+// const
+const server = http.createServer();
+const app = express(server);
+const bareServer = createBareServer('/bare/');
+// define port number here
+const PORT = 6060
+const __dirname = process.cwd();
 
-const fastify = Fastify({
-	serverFactory: (handler) => {
-		return createServer()
-			.on("request", (req, res) => {
-				res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
-				res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
-				handler(req, res);
-			})
-			.on("upgrade", (req, socket, head) => {
-				if (req.url.endsWith("/wisp/")) wisp.routeRequest(req, socket, head);
-				else socket.end();
-			});
-	},
+//file pathing & using cors and express
+app.use(express.json());
+app.use(express.urlencoded({ extended: true}));
+app.use(cors());
+app.use("uv", express.static(__dirname + '/@'));
+app.use(express.static(__dirname + '/public'));
+
+// normal url points to html file
+app.get('/', (req, res) => {
+    res.sendFile(path.join(process.cwd(), '/public/index.html'));
 });
 
-fastify.register(fastifyStatic, {
-    root: fileURLToPath(new URL("./public", import.meta.url))
+// bare request
+server.on('request', (req, res) => {
+    if (bareServer.shouldRoute(req)) {
+        bareServer.routeRequest(req, res)
+      } else {
+        app(req, res)
+      }
+})
+
+// bare 
+server.on("upgrade", (req, socket, head) => {
+    bare.routeRequest(req, socket, head);
 });
 
-fastify.get("/uv/uv.config.js", (req, res) => {
-	return res.sendFile("uv/uv.config.js", publicPath);
-});
+// running!
+server.on('listening', () => {
+  const address = server.address();
+  console.log(`Listening on port 6969.`)
+})
 
-fastify.register(fastifyStatic, {
-	root: uvPath,
-	prefix: "/uv/",
-	decorateReply: false,
-});
-
-fastify.register(fastifyStatic, {
-	root: epoxyPath,
-	prefix: "/epoxy/",
-	decorateReply: false,
-});
-
-fastify.register(fastifyStatic, {
-	root: baremuxPath,
-	prefix: "/baremux/",
-	decorateReply: false,
-});
-
-fastify.server.on("listening", () => {
-	const address = fastify.server.address();
-
-	// by default we are listening on 0.0.0.0 (every interface)
-	// we just need to list a few
-	console.log("Listening on:");
-	console.log(`\thttp://localhost:${address.port}`);
-	console.log(`\thttp://${hostname()}:${address.port}`);
-	console.log(
-		`\thttp://${
-			address.family === "IPv6" ? `[${address.address}]` : address.address
-		}:${address.port}`
-	);
-});
-
+//when stopped:
+server.listen({ port: PORT, })
 process.on("SIGINT", shutdown);
 process.on("SIGTERM", shutdown);
-
 function shutdown() {
-	console.log("SIGTERM signal received: closing HTTP server");
-	fastify.close();
-	process.exit(0);
+  console.log("Stopped or timed out..look in console for more information.");
+  server.close();
+  bareServer.close();
+  process.exit(0);
 }
-
-let port = parseInt(process.env.PORT || "");
-
-if (isNaN(port)) port = 8080;
-
-fastify.listen({
-	port: port,
-	host: "0.0.0.0",
-});
