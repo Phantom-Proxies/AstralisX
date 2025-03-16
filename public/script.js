@@ -5,23 +5,19 @@ class Tab {
         this.active = "false";
         this.history = [tabURL];
         this.historyIndex = 0;
-        this.loadWithProxy = !this.url.startsWith('astralisX://');
     }
 
-    changeLocation(newTitle, newURL) {
-        if (newURL === 'astralisx://home') {
-            this.title = 'Home';
-        } else if (newURL === 'astralisX://newtab') {
-            this.title = 'New Tab';
-        } else {
-            this.title = newTitle;
-        }
+    changeLocation(newURL) {
         this.url = newURL;
-        this.history.push(newURL);
-        this.historyIndex = this.history.length - 1;
-        this.loadWithProxy = !this.url.startsWith('astralisX://');
+        if (this.history[this.historyIndex] !== newURL) {
+            this.history.splice(this.historyIndex + 1);
+            this.history.push(newURL);
+            this.historyIndex = this.history.length - 1;
+        }
+
         tabController.update();
         tabController.updateIframe();
+        document.getElementById("uv-address").value = newURL;
     }
 
     goBack() {
@@ -56,8 +52,7 @@ class TabController {
         let container = document.getElementById(this.containerID);
         container.innerHTML = `<div class="newtab" id="newtab" onclick="tabController.newtab('astralisX://newtab', 'New Tab');"><img src="icons/add-tab.png" class="newtab-icon"></div>`;
         this.tabs.forEach((tab, index) => {
-            container.innerHTML += `<div class="tab" draggable="true" data-index="${index}" onclick="tabController.opentab(${index})" active-tab="${tab.active}">
-            <img src="icons/new-tab.png" class="tab-favicon">
+            container.innerHTML += `<div class="tab" draggable="true" data-index="${index}" onclick="tabController.opentab(${index})" active-tab="${tab.active}">            <img src="icons/new-tab.png" class="tab-favicon">
             <p class="tab-title">${tab.title}</p>
             <img src="icons/tab-close.png" class="tab-close" onclick="event.stopPropagation(); tabController.deletetab(${index})">
         </div>`;
@@ -65,7 +60,7 @@ class TabController {
         this.addDragEventListeners();
     }
 
-    addDragEventListeners(){
+    addDragEventListeners() {
         const tabs = document.querySelectorAll('.tab');
         tabs.forEach(tab => {
             tab.addEventListener('dragstart', this.handleDragStart.bind(this));
@@ -88,7 +83,7 @@ class TabController {
         this.moveTab(fromIndex, toIndex);
     }
 
-    moveTab(fromIndex, toIndex){
+    moveTab(fromIndex, toIndex) {
         const tab = this.tabs.splice(fromIndex, 1)[0];
         this.tabs.splice(toIndex, 0, tab);
 
@@ -143,17 +138,29 @@ class TabController {
         let activeTab = this.tabs[this.activetab];
         if (activeTab.url.startsWith("astralisX://")) {
             if (activeTab.url === "astralisX://home") {
-                iframe.src = "";
                 iframe.src = "home.html";
             } else if (activeTab.url === "astralisX://newtab") {
-                iframe.src = "";
                 iframe.src = "new.html";
+                iframe.contentWindow.postMessage({ type: 'updateUrl', url: activeTab.url }, '*');
             } else {
                 iframe.src = "";
             }
         } else {
-            iframe.src = "";
-            iframe.src = activeTab.url;
+            let urlToEncode = activeTab.url;
+            if (!urlToEncode.startsWith('http://') && !urlToEncode.startsWith('https://')) {
+                if (urlToEncode.includes('.')) {
+                    urlToEncode = 'https://' + urlToEncode;
+                } else {
+                    urlToEncode = 'https://www.bing.com/search?q=' + encodeURIComponent(urlToEncode);
+                }
+            }
+            try {
+                const url = __uv$config.prefix + __uv$config.encodeUrl(urlToEncode);
+                iframe.src = url;
+            } catch (e) {
+                console.error("error encoding url", e);
+                iframe.src = "";
+            }
         }
     }
 }
@@ -169,30 +176,12 @@ document.addEventListener('keydown', function (event) {
     if (event.key === 'Enter') {
         let searchBox = document.getElementById("uv-address");
         if (searchBox === document.activeElement) {
-            let urlCheck = checkURL(searchBox.value);
-            let url = null;
-            if (urlCheck.isValid == false && !searchBox.value.startsWith("astralisX://")) {
-                url = "https://bing.com/search?q=" + encodeURIComponent(searchBox.value);
-            } else {
-                url = urlCheck.url;
-            }
-            let title = url;
-            console.log(url);
-            tabController.tabs[tabController.activetab].changeLocation(title, url);
+            let url = searchBox.value;
+            tabController.tabs[tabController.activetab].changeLocation(url);
             document.getElementById("tab-viewer").focus();
         }
     }
 });
-
-function checkURL(input) {
-    if (input.startsWith("http://") || input.startsWith("https://") || input.startsWith("astralisX://")) {
-        return { isValid: true, url: input };
-    }
-    if (input.includes(".") && input.split(".").length > 1) {
-        return { isValid: true, url: "https://" + input };
-    }
-    return { isValid: false, url: null };
-}
 
 document.getElementById('back-button').addEventListener('click', function() {
     tabController.tabs[tabController.activetab].goBack();
@@ -204,7 +193,21 @@ document.getElementById('forward-button').addEventListener('click', function() {
 
 document.getElementById('reload-button').addEventListener('click', function() {
     tabController.tabs[tabController.activetab].changeLocation(
-        tabController.tabs[tabController.activetab].title,
         tabController.tabs[tabController.activetab].url
     );
 });
+
+(async () => {
+    const uv = new Ultraviolet();
+    window.__uv$config = uv.config;
+
+    if ('serviceWorker' in navigator) {
+        try {
+            await navigator.serviceWorker.register('/uv.sw.js', {
+                scope: __uv$config.prefix,
+            });
+        } catch (error) {
+            console.error('Failed to register service worker:', error);
+        }
+    }
+})();
