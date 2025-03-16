@@ -86,7 +86,7 @@
             }
         }
 
-        .search-box {
+        .uv-address {
             font-family: "Inter", sans-serif;
             box-sizing: border-box;
             height: 36px;
@@ -104,7 +104,7 @@
             /*top: -60px;*/
         }
 
-        .search-box:focus {
+        .uv-address:focus {
             box-shadow: 0 0 10px 0.5px #109CBFFF;
             outline: none;
             color: white;
@@ -114,6 +114,6 @@
 <body>
 <h1><span class="title-highlight">AstralisX</span></h1>
 <br>
-<span class="button-container"><input class="search-box" id="search-box" placeholder="Enter your seach here..."><button onclick="" class="button">Search using Bing</button></span>
+<span class="button-container"><form id="uv-form"><input id="uv-search-engine" value="https://www.bing.com/search?q=%s" type="hidden"><input type="text" id="uv-address" class="uv-address" placeholder="Search the non real..."></form><button onclick="" class="button">Search using Bing</button></span>
 </body>
 </html>

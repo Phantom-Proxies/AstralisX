@@ -167,7 +167,7 @@ body {
     width: 25px;
 }
 
-.search-box {
+.uv-address {
     font-family: "Inter", sans-serif;
     box-sizing: border-box;
     height: 36px;
@@ -183,7 +183,7 @@ body {
     color: #8f8f8f;
 }
 
-.search-box:focus {
+.uv-address:focus {
     box-shadow: 0 0 10px 0.5px #109CBFFF;
     outline: none;
     color: white;

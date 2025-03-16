@@ -28,7 +28,7 @@ class Tab {
         if (this.historyIndex > 0) {
             this.historyIndex--;
             this.url = this.history[this.historyIndex];
-            document.getElementById("search-box").value = this.url;
+            document.getElementById("uv-address").value = this.url;
             tabController.update();
             tabController.updateIframe();
         }
@@ -38,7 +38,7 @@ class Tab {
         if (this.historyIndex < this.history.length - 1) {
             this.historyIndex++;
             this.url = this.history[this.historyIndex];
-            document.getElementById("search-box").value = this.url;
+            document.getElementById("uv-address").value = this.url;
             tabController.update();
             tabController.updateIframe();
         }
@@ -133,7 +133,7 @@ class TabController {
         this.tabs[index].active = "true";
         this.activetab = index;
         this.update();
-        document.getElementById("search-box").value = this.tabs[this.activetab].url;
+        document.getElementById("uv-address").value = this.tabs[this.activetab].url;
         this.updateIframe();
     }
 
@@ -163,11 +163,11 @@ tabController.newtab('astralisX://home', 'Home');
 tabController.newtab('astralisX://newtab', 'New Tab');
 tabController.update();
 tabController.opentab(0);
-document.getElementById("search-box").value = "";
+document.getElementById("uv-address").value = "";
 
 document.addEventListener('keydown', function (event) {
     if (event.key === 'Enter') {
-        let searchBox = document.getElementById("search-box");
+        let searchBox = document.getElementById("uv-address");
         if (searchBox === document.activeElement) {
             let urlCheck = checkURL(searchBox.value);
             let url = null;

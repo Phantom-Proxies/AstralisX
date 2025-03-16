@@ -18,8 +18,11 @@
             <button id="forward-button"><i class="fas fa-arrow-right"></i></button>
             <button id="reload-button"><i class="fas fa-sync-alt"></i></button>
         </div>
-        <div id="search-box-container">
-            <input type="url" id="search-box" class="search-box" placeholder="Enter URL here...">
+        <div id="uv-address-container">
+            <form id="uv-form">
+                <input id="uv-search-engine" value="https://www.bing.com/search?q=%s" type="hidden">
+                <input type="text" id="uv-address" class="uv-address" placeholder="Enter URL here...">
+            </form>
         </div>
     </div>
     <iframe id="tab-viewer" class="tab-viewer"></iframe>
