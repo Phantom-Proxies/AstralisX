@@ -50,7 +50,7 @@ class TabController {
 
     update() {
         //document.getElementById('tab-viewer-collection').innerHTML = "";
-        if (document.getElementById(`tab-viewer-${this.activetab}`) != null){document.getElementById(`tab-viewer-${this.activetab}`).style.opacity = "0"};
+        //if (document.getElementById(`tab-viewer-${this.activetab}`) != null){document.getElementById(`tab-viewer-${this.activetab}`).style.opacity = "0"};
         let container = document.getElementById(this.containerID);
         container.innerHTML = `<div class="newtab" id="newtab" onclick="tabController.newtab('astralisX://newtab', 'New Tab');"><img src="icons/add-tab.png" class="newtab-icon"></div>`;
         this.tabs.forEach((tab, index) => {
@@ -60,7 +60,7 @@ class TabController {
         </div>`;
             if (document.getElementById(`tab-viewer-${index}`) != null) {
                 console.log("tab-viewer exists");
-                if (document.getElementById(`tab-viewer-${index}`).src != this.getProxiedURL(tab.url)) {
+                if (document.getElementById(`tab-viewer-${index}`).src !== this.getProxiedURL(tab.url)) {
                     document.getElementById(`tab-viewer-${index}`).src = this.getProxiedURL(tab.url);
                     console.log("tab-viewer updated because URL changed");
                 }
@@ -140,14 +140,15 @@ class TabController {
     opentab(index) {
         this.tabs[this.activetab].active = "false";
         this.tabs[index].active = "true";
-        this.activetab = index;
         this.update();
+        //document.getElementById(`tab-viewer-${this.activetab}`).style.opacity = "0"
         //document.getElementById(`tab-viewer-${this.activetab}`).style.animationFillMode = "forwards";
         document.getElementById(`tab-viewer-${this.activetab}`).style.animation = "fadeOut 0.2s 1 forwards";
         //document.getElementById(`tab-viewer-${index}`).style.animationFillMode = "forwards";
         document.getElementById(`tab-viewer-${index}`).style.animation = "fadeIn 0.2s 1 forwards";
         document.getElementById("uv-address").value = this.tabs[this.activetab].url;
         //this.updateIframe();
+        this.activetab = index;
     }
 
     getProxiedURL(url) {
