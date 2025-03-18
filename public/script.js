@@ -14,9 +14,7 @@ class Tab {
             this.history.push(newURL);
             this.historyIndex = this.history.length - 1;
         }
-
         tabController.update();
-        //tabController.updateIframe();
         document.getElementById("uv-address").value = newURL;
     }
 
@@ -26,7 +24,6 @@ class Tab {
             this.url = this.history[this.historyIndex];
             document.getElementById("uv-address").value = this.url;
             tabController.update();
-            //tabController.updateIframe();
         }
     }
 
@@ -36,7 +33,6 @@ class Tab {
             this.url = this.history[this.historyIndex];
             document.getElementById("uv-address").value = this.url;
             tabController.update();
-            //tabController.updateIframe();
         }
     }
 }
@@ -49,27 +45,21 @@ class TabController {
     }
 
     update() {
-        //document.getElementById('tab-viewer-collection').innerHTML = "";
-        //if (document.getElementById(`tab-viewer-${this.activetab}`) != null){document.getElementById(`tab-viewer-${this.activetab}`).style.opacity = "0"};
         let container = document.getElementById(this.containerID);
         container.innerHTML = `<div class="newtab" id="newtab" onclick="tabController.newtab('astralisX://newtab', 'New Tab');"><img src="icons/add-tab.png" class="newtab-icon"></div>`;
         this.tabs.forEach((tab, index) => {
-            container.innerHTML += `<div class="tab" draggable="true" data-index="${index}" onclick="tabController.opentab(${index})" active-tab="${tab.active}">            <img src="icons/new-tab.png" class="tab-favicon">
+            container.innerHTML += `<div class="tab" draggable="true" data-index="${index}" onclick="tabController.opentab(${index})" active-tab="${tab.active}">
+            <img src="icons/new-tab.png" class="tab-favicon">
             <p class="tab-title">${tab.title}</p>
             <img src="icons/tab-close.png" class="tab-close" onclick="event.stopPropagation(); tabController.deletetab(${index})">
         </div>`;
             if (document.getElementById(`tab-viewer-${index}`) != null) {
-                console.log("tab-viewer exists");
                 if (document.getElementById(`tab-viewer-${index}`).src !== this.getProxiedURL(tab.url)) {
                     document.getElementById(`tab-viewer-${index}`).src = this.getProxiedURL(tab.url);
-                    console.log("tab-viewer updated because URL changed");
                 }
             } else {
                 document.getElementById('tab-viewer-collection').innerHTML += `<iframe id="tab-viewer-${index}" class="tab-viewer" src="${this.getProxiedURL(tab.url)}"></iframe>`;
-                console.log("tab-viewer did not exist and was created");
             }
-
-            console.log(`tab created at index ${index}`);
         });
         this.addDragEventListeners();
     }
@@ -118,7 +108,6 @@ class TabController {
         }
 
         this.update();
-        //this.updateIframe();
     }
 
     newtab(url, title) {
@@ -141,24 +130,20 @@ class TabController {
         this.tabs[this.activetab].active = "false";
         this.tabs[index].active = "true";
         this.update();
-        //document.getElementById(`tab-viewer-${this.activetab}`).style.opacity = "0"
-        //document.getElementById(`tab-viewer-${this.activetab}`).style.animationFillMode = "forwards";
         document.getElementById(`tab-viewer-${this.activetab}`).style.animation = "fadeOut 0.2s 1 forwards";
-        //document.getElementById(`tab-viewer-${index}`).style.animationFillMode = "forwards";
         document.getElementById(`tab-viewer-${index}`).style.animation = "fadeIn 0.2s 1 forwards";
         document.getElementById("uv-address").value = this.tabs[this.activetab].url;
-        //this.updateIframe();
         this.activetab = index;
     }
 
     getProxiedURL(url) {
+        const baseURL = window.location.origin;
+
         if (url.startsWith("astralisX://")) {
             if (url === "astralisX://home") {
-                return "home.html";
+                return `${baseURL}/home.html`;
             } else if (url === "astralisX://newtab") {
-                return "new.html";
-                //MAY BE AN ISSUE!!!
-                //iframe.contentWindow.postMessage({ type: 'updateUrl', url: activeTab.url }, '*');
+                return `${baseURL}/new.html`;
             } else {
                 return "";
             }
