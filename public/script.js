@@ -133,6 +133,8 @@ class TabController {
         document.getElementById(`tab-viewer-${this.activetab}`).style.animation = "fadeOut 0.2s 1 forwards";
         document.getElementById(`tab-viewer-${index}`).style.animation = "fadeIn 0.2s 1 forwards";
         document.getElementById("uv-address").value = this.tabs[this.activetab].url;
+        document.getElementById(`tab-viewer-${index}`).style.zIndex = "10";
+        document.getElementById(`tab-viewer-${this.activetab}`).style.zIndex = "9";
         this.activetab = index;
     }
 
