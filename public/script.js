@@ -127,14 +127,24 @@ class TabController {
     }
 
     opentab(index) {
+        //SET ACTIVE TABS
         this.tabs[this.activetab].active = "false";
         this.tabs[index].active = "true";
+
+        //UPDATE TAB CONTROLLER
         this.update();
+
+        //FADE IN AND OUT THE IFRAMES
         document.getElementById(`tab-viewer-${this.activetab}`).style.animation = "fadeOut 0.2s 1 forwards";
         document.getElementById(`tab-viewer-${index}`).style.animation = "fadeIn 0.2s 1 forwards";
+
+        //UPDATE URL BAR
         document.getElementById("uv-address").value = this.tabs[this.activetab].url;
+
+        //UPDATE IFRAME LAYER
         document.getElementById(`tab-viewer-${index}`).style.zIndex = "10";
         document.getElementById(`tab-viewer-${this.activetab}`).style.zIndex = "9";
+
         this.activetab = index;
     }
 
