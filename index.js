@@ -15,7 +15,7 @@ const server = http.createServer();
 const app = express(server);
 const bareServer = createBareServer('/bare/');
 // define port number here
-const PORT = 6060
+const PORT = 5000;
 const __dirname = process.cwd();
 
 //file pathing & using cors and express
@@ -47,7 +47,7 @@ server.on("upgrade", (req, socket, head) => {
 // running!
 server.on('listening', () => {
   const address = server.address();
-  console.log(`Listening on port 6060.`)
+  console.log(`Listening on port 5000.`)
 })
 
 //when stopped:
